@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: carbona-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: pcf_user
+      POSTGRES_PASSWORD: pcf_password
+      POSTGRES_DB: pcf_db
+    volumes:
+      - carbona_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  carbona_postgres_data:
