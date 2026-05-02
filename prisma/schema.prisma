@@ -1,13 +1,181 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
+// Prisma Client 설정
+// 생성된 Prisma Cliet가 위치할 경로 지정
 generator client {
-  provider = "prisma-client"
-  output   = "../app/generated/prisma"
+  provider = "prisma-client-js"
 }
 
+// 데이터베이스 연결 설정
+// PostgreSQL 사용
 datasource db {
   provider = "postgresql"
+}
+
+// 활동 카테고리 Enum
+// 전기, 원소재, 운송
+enum ActivityCategory {
+  ELECTRICITY
+  MATERIAL
+  TRANSPORT
+}
+
+// 수동 입력 or 엑셀 업로드
+enum InputType {
+  MANUAL
+  EXCEL
+}
+
+// Excel Import 결과 상태
+enum ImportStatus {
+  SUCCESS
+  PARTIAL_FAILED
+  FAILED
+}
+
+// 배출계수 테이블
+// 활동 데이터에서 탄소 배출량 계산 시 사용하는 기준 값
+model EmissionFactor {
+  id Int @id @default(autoincrement())
+  // 배출계수 이름 (예: 한국전력, 플라스틱1, 트럭 운송)
+  name String
+  
+  // 활동 카테고리
+  category ActivityCategory
+
+  // 활동 단위 (kWh, kg, ton-km)
+  unit String
+
+  // 배출계수 값 
+  // 예: 0.456, 2.3 등
+  factor Float
+
+  // 배출 계수 단위 (kgCO2e/kWh 등)
+  factorUnit String
+
+  // 배출 계수 출처
+  source String?
+
+  // 배출 계수 버전
+  version String?
+
+  // 활성화 여부 (이전 버전 비활성화 가능)
+  isActive Boolean @default(true)
+  
+  // Activity와 1:N 관계
+  // 하나의 배출계수는 여러 활동 데이터에 사용됨
+  activities Activity[]
+
+  // 생성, 수정 시간
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // 조회 최적화를 위한 인덱스
+  @@index([category])
+  @@index([isActive])
+}
+
+// 활동 데이터 테이블
+// 시용자가 입력하거나 Excel로 업로드한 실제 데이터
+model Activity {
+  id Int @id @default(autoincrement())
+
+  // 활동 발생 일지
+  activityDate DateTime
+
+  // 활동 카테고리
+  category ActivityCategory
+
+  // 항목명 (예: 한국전력, 플라스틱1 등)
+  itemName String
+
+  // 항목량 (예: 110, 230 등)
+  amount Float
+
+  // 단위 (kWh, kg, ton-km)
+  unit String
+
+  // 사용된 배출계수 ID (FK)
+  emissionFactorId Int
+
+  // 계산된 탄소 배출량
+  // 저장 시 계산 (amount * factor)
+  emissionValue Float
+
+  // 메모
+  memo String?
+
+  // 입력 방식 (수동 or Excel)
+  inputType InputType @default(MANUAL)
+
+  // 뱨출계수와 관계 설정
+  emissionFactor EmissionFactor @relation(fields: [emissionFactorId], references: [id])
+
+  // 생성, 수정 시간
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // 조회 성능을 위한 인덱스
+  @@index([activityDate])
+  @@index([category])
+  @@index([emissionFactorId])
+}
+
+// 목표 설정 테이블
+model EmissionTarget {
+  id Int @id @default(autoincrement())
+
+  // 연도
+  year Int
+
+  // 월
+  month Int
+
+  // 카테고리별 목표 (null 이면 전체 목표)
+  category ActivityCategory?
+
+  // 목표 배출량
+  targetValue Float
+
+  // 단위 (기본 : kgCO2e)
+  unit String @default("kgCO2e")
+
+  // 메모
+  memo String?
+
+  //생성, 수정 시간
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  // 동일한 연,월,카테고리 중복 방지
+  @@unique([year, month, category])
+
+  // 조회 성능을 위한 인덱스
+  @@index([year, month])
+}
+
+// Excel Import 로그 테이블
+// 업로드 결과 추적 및 디버깅 용도
+model ImportLog {
+  id Int @id @default(autoincrement())
+
+  // 업로드한 파일 이름
+  fileName String
+
+  // 전체 행 수
+  totalRows Int
+
+  // 성공적으로 처리된 행 수
+  successRows Int
+
+  // 실패한 행 수
+  failedRows Int
+
+  // 처리 상태 (SUCCESS, PARTIAL, FAILED)
+  status ImportStatus
+
+  // 에러 메시지
+  errorMessage String?
+
+  // 생성 시간
+  createdAt DateTime @default(now())
 }
