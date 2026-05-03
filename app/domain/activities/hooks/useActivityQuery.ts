@@ -1,21 +1,43 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createActivity, getActivities } from "../api/activities.api";
-import { ActivityRequest } from "../types";
+import {
+  createActivity,
+  deleteActivity,
+  getActivities,
+} from "../api/activities.api";
+import { CreateActivityInput } from "../schemas/activity.schema";
 
-export const useActivtyQuery = () => {
+export const activityQueryKey = ["activities"];
+
+export const useActivityQuery = () => {
   return useQuery({
-    queryKey: ["actvities"],
+    queryKey: activityQueryKey,
     queryFn: () => getActivities(),
   });
 };
 
-export const useActivtyMutation = () => {
+export const useCreateActivityMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: ActivityRequest) => createActivity(data),
+    mutationFn: (data: CreateActivityInput) => createActivity(data),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["actvities"],
+        queryKey: activityQueryKey,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["dashboard"],
+      });
+    },
+  });
+};
+
+export const useDeleteActivityMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => deleteActivity(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: activityQueryKey,
       });
 
       queryClient.invalidateQueries({
