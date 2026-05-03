@@ -10,4 +10,4 @@ export const createActivitySchema = z.object({
   memo: z.string().optional(),
 });
 
-export type createActivityInput = z.infer<typeof createActivitySchema>;
+export type CreateActivityInput = z.infer<typeof createActivitySchema>;
