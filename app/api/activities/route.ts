@@ -1,5 +1,9 @@
 import { createActivitySchema } from "@/app/domain/activities/schemas/activity.schema";
-import { createActivityService, getActivites } from "@/app/domain/activities/services/activity.service";
+import {
+  ActivityServiceError,
+  createActivityService,
+  getActivites,
+} from "@/app/domain/activities/services/activity.service";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
@@ -34,7 +38,18 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 },
     );
-  } catch {
+  } catch (error: unknown) {
+    if (error instanceof ActivityServiceError) {
+      return NextResponse.json(
+        {
+          message: error.message,
+        },
+        {
+          status: error.statusCode,
+        },
+      );
+    }
+
     return NextResponse.json(
       {
         message: "활동 데이터 생성 중 오류가 발생했습니다.",
