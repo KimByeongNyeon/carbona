@@ -1,7 +1,19 @@
 import { prisma } from "@/app/lib/prisma";
-import { createActivityInput } from "../schemas/activity.schema";
+import { CreateActivityInput } from "../schemas/activity.schema";
 
-export async function createActivityService(input: createActivityInput) {
+type ActivityServiceErrorStatus = 400 | 404 | 409;
+
+export class ActivityServiceError extends Error {
+  statusCode: ActivityServiceErrorStatus;
+
+  constructor(message: string, statusCode: ActivityServiceErrorStatus) {
+    super(message);
+    this.name = "ActivityServiceError";
+    this.statusCode = statusCode;
+  }
+}
+
+export async function createActivityService(input: CreateActivityInput) {
   const emissionFactor = await prisma.emissionFactor.findUnique({
     where: {
       id: input.emissionFactorId,
@@ -9,22 +21,28 @@ export async function createActivityService(input: createActivityInput) {
   });
 
   if (!emissionFactor) {
-    throw new Error("배출계수가 존재하지 않습니다.");
+    throw new ActivityServiceError("배출계수가 존재하지 않습니다.", 404);
   }
 
   if (!emissionFactor.isActive) {
-    throw new Error("비활성화된 배출계수입니다.");
+    throw new ActivityServiceError("비활성화된 배출계수입니다.", 409);
   }
 
   if (emissionFactor.category !== input.category) {
-    throw new Error("활동 카테고리와 배출계수 카테고리가 일치하지 않습니다.");
+    throw new ActivityServiceError(
+      "활동 카테고리와 배출계수 카테고리가 일치하지 않습니다.",
+      400,
+    );
   }
 
   if (emissionFactor.unit !== input.unit) {
-    throw new Error("활동 단위와 배출계수 단위가 일치하지 않습니다.");
+    throw new ActivityServiceError(
+      "활동 단위와 배출계수 단위가 일치하지 않습니다.",
+      400,
+    );
   }
 
-  const emissionValue = (input.amount = emissionFactor.factor);
+  const emissionValue = input.amount * emissionFactor.factor;
 
   return prisma.activity.create({
     data: {
