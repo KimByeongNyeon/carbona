@@ -62,7 +62,23 @@ export async function createActivityService(input: CreateActivityInput) {
   });
 }
 
-export async function getActivites() {
+export async function getActivities() {
   const activities = prisma.activity.findMany();
   return activities;
+}
+
+export async function deleteActivity(id: number) {
+  const activity = await prisma.activity.findUnique({
+    where: { id },
+  });
+
+  if (!activity) {
+    throw new ActivityServiceError("활동 데이터가 존재하지 않습니다.", 404);
+  }
+
+  await prisma.activity.delete({
+    where: { id },
+  });
+
+  return { id };
 }
