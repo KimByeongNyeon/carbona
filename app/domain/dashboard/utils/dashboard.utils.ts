@@ -2,7 +2,6 @@ import { Activity } from "../../activities/types";
 import {
   dashboardCategoryColors,
   dashboardCategoryLabels,
-  targetEmissionValue,
 } from "../constants/dashboard.constants";
 import { DashboardCategoryItem, DashboardMonthlyItem } from "../types";
 
@@ -38,10 +37,6 @@ export const getMonthlyTrendData = (monthlyTrend: DashboardMonthlyItem[]) => {
     month: item.month.slice(2).replace("-", "."),
     emissionValue: item.emissionValue,
   }));
-};
-
-export const getTargetProgress = (totalEmission: number) => {
-  return Math.round((totalEmission / targetEmissionValue) * 1000) / 10;
 };
 
 export const getRecentActivitiesForTable = (activities: Activity[]) => {
