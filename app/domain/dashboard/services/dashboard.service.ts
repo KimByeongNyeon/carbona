@@ -48,6 +48,19 @@ export async function getDashboard() {
     .sort((a, b) => b.activityDate.getTime() - a.activityDate.getTime())
     .slice(0, RECENT_ACTIVITY_LIMIT);
 
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+
+  const targets = await prisma.emissionTarget.findMany({
+    where: { year, month },
+  });
+
+  const totalTarget =
+    targets.find((t) => t.category === null)?.targetValue ?? 0;
+
+  const progress = totalTarget > 0 ? (totalEmission / totalTarget) * 100 : 0;
+
   return {
     summary: {
       totalEmission,
@@ -71,5 +84,10 @@ export async function getDashboard() {
     ],
     monthlyTrend,
     recentActivities,
+
+    target: {
+      totalTarget: totalTarget,
+      progress: progress,
+    },
   };
 }
