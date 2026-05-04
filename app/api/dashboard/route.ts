@@ -1,9 +1,23 @@
 import { getDashboard } from "@/app/domain/dashboard/services/dashboard.service";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+const parseOptionalNumber = (value: string | null) => {
+  if (!value) {
+    return undefined;
+  }
+
+  const parsed = Number(value);
+
+  return Number.isNaN(parsed) ? undefined : parsed;
+};
+
+export async function GET(request: NextRequest) {
   try {
-    const dashboard = await getDashboard();
+    const dashboard = await getDashboard({
+      month: parseOptionalNumber(request.nextUrl.searchParams.get("month")),
+      period: parseOptionalNumber(request.nextUrl.searchParams.get("period")),
+      year: parseOptionalNumber(request.nextUrl.searchParams.get("year")),
+    });
 
     return NextResponse.json({
       data: dashboard,
