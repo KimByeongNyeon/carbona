@@ -20,18 +20,6 @@ export const ActivityPage = () => {
               </p>
             </div>
           </div>
-
-          <div className="mt-5 flex gap-6">
-            <button
-              type="button"
-              className="border-b-2 border-blue-600 pb-3 text-sm font-bold text-blue-700"
-            >
-              수동 입력
-            </button>
-            <button type="button" className="pb-3 text-sm font-bold text-slate-500">
-              입력 내역
-            </button>
-          </div>
         </div>
 
         <div className="p-6">

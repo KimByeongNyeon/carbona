@@ -41,18 +41,6 @@ export const ExcelPage = () => {
               샘플 다운로드
             </button>
           </div>
-
-          <div className="mt-5 flex gap-6">
-            <button
-              type="button"
-              className="border-b-2 border-blue-600 pb-3 text-sm font-bold text-blue-700"
-            >
-              파일 업로드
-            </button>
-            <button type="button" className="pb-3 text-sm font-bold text-slate-500">
-              검증 결과
-            </button>
-          </div>
         </div>
 
         <div className="grid gap-4 border-b border-slate-100 p-6 md:grid-cols-3">

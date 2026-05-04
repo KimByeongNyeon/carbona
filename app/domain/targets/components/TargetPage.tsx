@@ -50,18 +50,6 @@ export const TargetPage = () => {
               </select>
             </div>
           </div>
-
-          <div className="mt-5 flex gap-6">
-            <button
-              type="button"
-              className="border-b-2 border-blue-600 pb-3 text-sm font-bold text-blue-700"
-            >
-              목표 설정
-            </button>
-            <button type="button" className="pb-3 text-sm font-bold text-slate-500">
-              목표 이력
-            </button>
-          </div>
         </div>
 
         <div className="space-y-6 p-6">
