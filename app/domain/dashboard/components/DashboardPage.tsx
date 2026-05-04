@@ -18,6 +18,7 @@ export const DashboardPage = () => {
     monthlyTrendData,
     recentActivities,
     period,
+    reportUrl,
     selectedMonthLabel,
     selectedMonthValue,
     targetPeriod,
@@ -35,7 +36,7 @@ export const DashboardPage = () => {
             활동 데이터 기반 탄소 배출 현황을 한눈에 확인합니다.
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <select
             value={period}
             onChange={(event) => handleChangePeriod(event.target.value)}
@@ -58,6 +59,12 @@ export const DashboardPage = () => {
               </option>
             ))}
           </select>
+          <a
+            href={reportUrl}
+            className="inline-flex h-10 items-center rounded-md bg-blue-600 px-4 text-sm font-semibold text-white transition hover:bg-blue-700"
+          >
+            PDF 다운로드
+          </a>
         </div>
       </div>
 
