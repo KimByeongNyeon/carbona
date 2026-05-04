@@ -9,12 +9,18 @@ import { useDashboardPage } from "../hooks/useDashboardPage";
 
 export const DashboardPage = () => {
   const {
+    availableMonths,
     categoryRatioData,
     dashboard,
+    handleChangePeriod,
+    handleChangeSelectedMonth,
     isLoading,
     monthlyTrendData,
     recentActivities,
-    currentTargetPeriod,
+    period,
+    selectedMonthLabel,
+    selectedMonthValue,
+    targetPeriod,
     target,
     targetProgress,
     targetStatus,
@@ -30,13 +36,27 @@ export const DashboardPage = () => {
           </p>
         </div>
         <div className="flex gap-2">
-          <select className="h-10 rounded-md border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-600">
-            <option>기간 선택</option>
-            <option>최근 6개월</option>
-            <option>최근 12개월</option>
+          <select
+            value={period}
+            onChange={(event) => handleChangePeriod(event.target.value)}
+            className="h-10 rounded-md border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-600"
+          >
+            <option value={6}>최근 6개월</option>
+            <option value={12}>최근 12개월</option>
           </select>
-          <select className="h-10 rounded-md border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-600">
-            <option>2026.05</option>
+          <select
+            value={selectedMonthValue}
+            onChange={(event) => handleChangeSelectedMonth(event.target.value)}
+            className="h-10 rounded-md border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-600"
+          >
+            {availableMonths.length === 0 && (
+              <option value="">{selectedMonthLabel || "기준월 없음"}</option>
+            )}
+            {availableMonths.map((month) => (
+              <option key={month.value} value={month.value}>
+                {month.label}
+              </option>
+            ))}
           </select>
         </div>
       </div>
@@ -62,7 +82,7 @@ export const DashboardPage = () => {
           <div className="grid gap-6 2xl:grid-cols-[1.3fr_1fr]">
             <DashboardRecentActivities activities={recentActivities} />
             <DashboardInsightCards
-              period={currentTargetPeriod}
+              period={targetPeriod}
               target={target}
               targetProgress={targetProgress}
               targetStatus={targetStatus}
