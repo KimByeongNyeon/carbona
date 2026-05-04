@@ -62,6 +62,14 @@ export const useDashboardPage = () => {
 
     setSelectedPeriod({ month, year });
   };
+  const reportSearchParams = new URLSearchParams();
+
+  if (activePeriod) {
+    reportSearchParams.set("year", String(activePeriod.year));
+    reportSearchParams.set("month", String(activePeriod.month));
+  }
+
+  reportSearchParams.set("period", String(period));
 
   return {
     availableMonths: data?.availableMonths ?? [],
@@ -73,6 +81,7 @@ export const useDashboardPage = () => {
     monthlyTrendData,
     period,
     recentActivities,
+    reportUrl: `/api/reports?${reportSearchParams.toString()}`,
     selectedMonthLabel: activePeriod
       ? formatDashboardMonthLabel(activePeriod.year, activePeriod.month)
       : "",
