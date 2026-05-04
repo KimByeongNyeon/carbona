@@ -12,6 +12,13 @@ export const formatEmissionNumber = (value: number) => {
   });
 };
 
+export const formatChangeRate = (value: number) => {
+  return Math.abs(value).toLocaleString("ko-KR", {
+    maximumFractionDigits: 1,
+    minimumFractionDigits: 0,
+  });
+};
+
 export const formatDashboardDate = (date: string) => {
   return new Intl.DateTimeFormat("ko-KR", {
     month: "2-digit",
@@ -20,6 +27,10 @@ export const formatDashboardDate = (date: string) => {
     .format(new Date(date))
     .replaceAll(". ", "-")
     .replace(".", "");
+};
+
+export const formatDashboardMonthLabel = (year: number, month: number) => {
+  return `${year}.${String(month).padStart(2, "0")}`;
 };
 
 export const getCategoryRatioData = (
