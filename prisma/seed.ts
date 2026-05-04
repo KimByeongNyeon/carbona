@@ -23,14 +23,21 @@ const main = async () => {
         factorUnit: "kgCO2e/kWh",
       },
       {
-        name: "플라스틱",
+        name: "플라스틱 1",
         category: ActivityCategory.MATERIAL,
         unit: "kg",
         factor: 2.3,
         factorUnit: "kgCO2e/kg",
       },
       {
-        name: "트럭 운송",
+        name: "플라스틱 2",
+        category: ActivityCategory.MATERIAL,
+        unit: "kg",
+        factor: 3.2,
+        factorUnit: "kgCO2e/kg",
+      },
+      {
+        name: "트럭",
         category: ActivityCategory.TRANSPORT,
         unit: "ton-km",
         factor: 3.5,
