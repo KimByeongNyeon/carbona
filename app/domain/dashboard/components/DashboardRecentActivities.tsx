@@ -1,8 +1,6 @@
 "use client";
 
-import {
-  dashboardCategoryStyles,
-} from "../constants/dashboard.constants";
+import { dashboardCategoryStyles } from "../constants/dashboard.constants";
 import { formatEmissionNumber } from "../utils/dashboard.utils";
 import { ActivityCategory } from "../types";
 
@@ -33,12 +31,6 @@ export const DashboardRecentActivities = ({
           </h2>
           <p className="mt-1 text-xs text-slate-500">최근 5건 기준</p>
         </div>
-        <button
-          type="button"
-          className="h-8 rounded-md border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-600"
-        >
-          전체 데이터 보기
-        </button>
       </div>
 
       <div className="overflow-hidden rounded-lg border border-slate-200">

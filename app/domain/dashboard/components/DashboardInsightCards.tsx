@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangle, CheckCircle2, Target } from "lucide-react";
+import { AlertTriangle, Target } from "lucide-react";
 import { formatEmissionNumber } from "../utils/dashboard.utils";
 import { EmissionTarget } from "../../targets/types";
 import {
@@ -34,7 +34,7 @@ export const DashboardInsightCards = ({
   const hasTarget = Boolean(target);
 
   return (
-    <div className="grid gap-4 lg:grid-cols-3">
+    <div className="grid gap-4 lg:grid-cols-2">
       <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
         <div className="mb-4 flex items-center gap-2">
           <AlertTriangle size={18} className="text-red-500" />
@@ -56,16 +56,6 @@ export const DashboardInsightCards = ({
 
       <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
         <div className="mb-4 flex items-center gap-2">
-          <CheckCircle2 size={18} className="text-emerald-600" />
-          <h2 className="text-base font-bold text-slate-950">적용</h2>
-        </div>
-        <p className="text-sm text-slate-600">
-          저장된 배출계수와 활동 데이터를 기준으로 대시보드가 계산됩니다.
-        </p>
-      </section>
-
-      <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-        <div className="mb-4 flex items-center gap-2">
           <Target size={18} className="text-blue-600" />
           <h2 className="text-base font-bold text-slate-950">목표 대비 현황</h2>
         </div>
@@ -78,7 +68,9 @@ export const DashboardInsightCards = ({
           <div className="absolute inset-x-0 top-10 h-3 rounded-full bg-slate-100">
             <div
               className="h-3 rounded-full bg-blue-600"
-              style={{ width: `${hasTarget ? Math.min(targetProgress, 100) : 0}%` }}
+              style={{
+                width: `${hasTarget ? Math.min(targetProgress, 100) : 0}%`,
+              }}
             />
           </div>
           <div className="mt-8 flex items-end justify-between">
@@ -92,7 +84,9 @@ export const DashboardInsightCards = ({
               <p>{formatEmissionNumber(totalEmission)} kgCO2e</p>
               <p>
                 목표{" "}
-                {target ? `${formatTargetValue(target.targetValue)} kgCO2e` : "미설정"}
+                {target
+                  ? `${formatTargetValue(target.targetValue)} kgCO2e`
+                  : "미설정"}
               </p>
             </div>
           </div>
