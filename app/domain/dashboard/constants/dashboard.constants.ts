@@ -17,5 +17,3 @@ export const dashboardCategoryStyles: Record<ActivityCategory, string> = {
   MATERIAL: "bg-emerald-50 text-emerald-700",
   TRANSPORT: "bg-orange-50 text-orange-700",
 };
-
-export const targetEmissionValue = 5000;
