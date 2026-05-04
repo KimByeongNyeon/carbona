@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 import {
   useCreateEmissionFactorMutation,
-  useDeleteEmissionFactor,
   useEmissionFactorQuery,
+  useToggleEmissionFactorMutation,
 } from "./useEmissionFactorQuery";
 import { CreateEmissionFactorInput } from "../schemas/emissionFactor.schema";
 import {
@@ -22,7 +22,7 @@ export const useEmissionFactorPage = () => {
 
   const { data: emissionFactors = [], isLoading } = useEmissionFactorQuery();
   const createMutation = useCreateEmissionFactorMutation();
-  const deleteMutation = useDeleteEmissionFactor();
+  const toggleMutation = useToggleEmissionFactorMutation();
 
   const visibleEmissionFactors = useMemo(
     () =>
@@ -47,18 +47,18 @@ export const useEmissionFactorPage = () => {
     setIsCreateFormOpen(false);
   };
 
-  const handleDeactivateEmissionFactor = async (id: number) => {
-    await deleteMutation.mutateAsync(id);
+  const handleToggleEmissionFactor = async (id: number, isActive: boolean) => {
+    await toggleMutation.mutateAsync({ id, isActive });
   };
 
   return {
     activeCount,
     categoryFilter,
     handleCreateEmissionFactor,
-    handleDeactivateEmissionFactor,
+    handleToggleEmissionFactor,
     isCreateFormOpen,
     isCreating: createMutation.isPending,
-    isDeleting: deleteMutation.isPending,
+    isToggling: toggleMutation.isPending,
     isLoading,
     searchKeyword,
     setCategoryFilter,
