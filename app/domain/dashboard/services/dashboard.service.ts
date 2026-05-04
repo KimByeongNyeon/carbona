@@ -115,7 +115,21 @@ export async function getDashboard(params: DashboardRequestParams = {}) {
 
   const recentActivities = [...activities]
     .sort((a, b) => b.activityDate.getTime() - a.activityDate.getTime())
-    .slice(0, RECENT_ACTIVITY_LIMIT);
+    .slice(0, RECENT_ACTIVITY_LIMIT)
+    .map((activity) => ({
+      activityDate: activity.activityDate.toISOString(),
+      amount: activity.amount,
+      category: activity.category,
+      createdAt: activity.createdAt.toISOString(),
+      emissionFactorId: activity.emissionFactorId,
+      emissionValue: activity.emissionValue,
+      id: activity.id,
+      inputType: activity.inputType,
+      itemName: activity.itemName,
+      memo: activity.memo ?? undefined,
+      unit: activity.unit,
+      updatedAt: activity.updatedAt.toISOString(),
+    }));
 
   const selectedPeriod = parseMonthKey(selectedMonthKey);
   const year = selectedPeriod.year;
