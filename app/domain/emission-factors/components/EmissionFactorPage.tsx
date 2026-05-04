@@ -10,11 +10,11 @@ export const EmissionFactorPage = () => {
     activeCount,
     categoryFilter,
     handleCreateEmissionFactor,
-    handleDeactivateEmissionFactor,
+    handleToggleEmissionFactor,
     isCreateFormOpen,
     isCreating,
-    isDeleting,
     isLoading,
+    isToggling,
     searchKeyword,
     setCategoryFilter,
     setIsCreateFormOpen,
@@ -45,18 +45,6 @@ export const EmissionFactorPage = () => {
             >
               <Plus size={17} />
               배출계수 추가
-            </button>
-          </div>
-
-          <div className="mt-5 flex gap-6">
-            <button
-              type="button"
-              className="border-b-2 border-blue-600 pb-3 text-sm font-bold text-blue-700"
-            >
-              배출계수 목록
-            </button>
-            <button type="button" className="pb-3 text-sm font-bold text-slate-500">
-              배출계수 이력
             </button>
           </div>
         </div>
@@ -96,9 +84,7 @@ export const EmissionFactorPage = () => {
               <select
                 value={categoryFilter}
                 onChange={(event) =>
-                  setCategoryFilter(
-                    event.target.value as typeof categoryFilter,
-                  )
+                  setCategoryFilter(event.target.value as typeof categoryFilter)
                 }
                 className="h-9 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-600"
               >
@@ -128,19 +114,13 @@ export const EmissionFactorPage = () => {
                 />
               </label>
             </div>
-            <button
-              type="button"
-              className="h-9 rounded-md bg-blue-600 px-4 text-sm font-semibold text-white"
-            >
-              조회
-            </button>
           </div>
 
           <EmissionFactorTable
             emissionFactors={visibleEmissionFactors}
-            isDeleting={isDeleting}
             isLoading={isLoading}
-            onDeactivate={handleDeactivateEmissionFactor}
+            isToggling={isToggling}
+            onToggle={handleToggleEmissionFactor}
           />
         </div>
       </section>

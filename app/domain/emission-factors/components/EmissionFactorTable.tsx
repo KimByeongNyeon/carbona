@@ -10,16 +10,16 @@ import { formatEmissionFactorDate } from "../utils/emissionFactor.utils";
 
 type EmissionFactorTableProps = {
   emissionFactors: EmissionFactor[];
-  isDeleting: boolean;
   isLoading: boolean;
-  onDeactivate: (id: number) => void;
+  isToggling: boolean;
+  onToggle: (id: number, isActive: boolean) => void;
 };
 
 export const EmissionFactorTable = ({
   emissionFactors,
-  isDeleting,
   isLoading,
-  onDeactivate,
+  isToggling,
+  onToggle,
 }: EmissionFactorTableProps) => {
   return (
     <div className="overflow-hidden rounded-lg border border-slate-200">
@@ -110,10 +110,18 @@ export const EmissionFactorTable = ({
                   </button>
                   <button
                     type="button"
-                    disabled={isDeleting || !factor.isActive}
-                    onClick={() => onDeactivate(factor.id)}
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-md text-slate-400 transition hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-40"
-                    aria-label="배출계수 비활성화"
+                    disabled={isToggling}
+                    onClick={() => onToggle(factor.id, !factor.isActive)}
+                    className={`inline-flex h-8 w-8 items-center justify-center rounded-md text-slate-400 transition disabled:cursor-not-allowed disabled:opacity-40 ${
+                      factor.isActive
+                        ? "hover:bg-red-50 hover:text-red-600"
+                        : "hover:bg-emerald-50 hover:text-emerald-600"
+                    }`}
+                    aria-label={
+                      factor.isActive
+                        ? "배출계수 비활성화"
+                        : "배출계수 재활성화"
+                    }
                   >
                     <Power size={16} />
                   </button>
