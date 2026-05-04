@@ -1,14 +1,22 @@
 import { useMemo } from "react";
 import { useDashboardQuery } from "./useDashboardQuery";
+import { useTargetQuery } from "../../targets/hooks/useTargetQuery";
+import {
+  getCurrentTargetPeriod,
+  getTargetProgress,
+  getTargetStatus,
+  getTotalTarget,
+} from "../../targets/utils/target.utils";
 import {
   getCategoryRatioData,
   getMonthlyTrendData,
   getRecentActivitiesForTable,
-  getTargetProgress,
 } from "../utils/dashboard.utils";
 
 export const useDashboardPage = () => {
   const { data, isLoading } = useDashboardQuery();
+  const currentTargetPeriod = getCurrentTargetPeriod();
+  const { data: targets = [] } = useTargetQuery(currentTargetPeriod);
 
   const categoryRatioData = useMemo(
     () => getCategoryRatioData(data?.categorySummary ?? []),
@@ -25,14 +33,20 @@ export const useDashboardPage = () => {
     [data?.recentActivities],
   );
 
-  const targetProgress = getTargetProgress(data?.summary.totalEmission ?? 0);
+  const totalTarget = getTotalTarget(targets);
+  const totalEmission = data?.summary.totalEmission ?? 0;
+  const targetProgress = getTargetProgress(totalEmission, totalTarget);
+  const targetStatus = getTargetStatus(totalEmission, totalTarget);
 
   return {
     categoryRatioData,
+    currentTargetPeriod,
     dashboard: data,
     isLoading,
     monthlyTrendData,
     recentActivities,
+    target: totalTarget,
     targetProgress,
+    targetStatus,
   };
 };
