@@ -19,9 +19,14 @@ export interface DashboardMonthlyItem {
   emissionValue: number;
 }
 
+export interface Target {
+  totalTarget: number;
+  progress: number;
+}
 export interface DashboardResponse {
   summary: DashboardSummary;
   categorySummary: DashboardCategoryItem[];
   monthlyTrend: DashboardMonthlyItem[];
   recentActivities: Activity[];
+  target: Target;
 }
