@@ -65,6 +65,27 @@ export async function updateEmissionFactor(
     throw new EmissionFactorServiceError("배출계수가 존재하지 않습니다.", 404);
   }
 
+  if (input.isActive === true && !emissionFactor.isActive) {
+    const duplicated = await prisma.emissionFactor.findFirst({
+      where: {
+        id: {
+          not: id,
+        },
+        name: input.name ?? emissionFactor.name,
+        category: input.category ?? emissionFactor.category,
+        unit: input.unit ?? emissionFactor.unit,
+        isActive: true,
+      },
+    });
+
+    if (duplicated) {
+      throw new EmissionFactorServiceError(
+        "동일한 이름, 카테고리, 단위의 활성 배출계수가 이미 존재합니다.",
+        409,
+      );
+    }
+  }
+
   return prisma.emissionFactor.update({
     where: { id },
     data: input,
