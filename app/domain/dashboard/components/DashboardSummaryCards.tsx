@@ -2,7 +2,10 @@
 
 import { Bolt, Cloud, Package, Truck } from "lucide-react";
 import { DashboardSummary } from "../types";
-import { formatEmissionNumber } from "../utils/dashboard.utils";
+import {
+  formatChangeRate,
+  formatEmissionNumber,
+} from "../utils/dashboard.utils";
 
 type DashboardSummaryCardsProps = {
   summary?: DashboardSummary;
@@ -15,28 +18,28 @@ export const DashboardSummaryCards = ({ summary }: DashboardSummaryCardsProps) =
       value: summary?.totalEmission ?? 0,
       icon: Cloud,
       iconClassName: "bg-blue-50 text-blue-600",
-      trend: "12.5%",
+      changeRate: summary?.totalEmissionChangeRate ?? null,
     },
     {
       label: "전기",
       value: summary?.electricityEmission ?? 0,
       icon: Bolt,
       iconClassName: "bg-blue-50 text-blue-600",
-      trend: "8.2%",
+      changeRate: summary?.electricityEmissionChangeRate ?? null,
     },
     {
       label: "원소재",
       value: summary?.materialEmission ?? 0,
       icon: Package,
       iconClassName: "bg-emerald-50 text-emerald-600",
-      trend: "15.3%",
+      changeRate: summary?.materialEmissionChangeRate ?? null,
     },
     {
       label: "운송",
       value: summary?.transportEmission ?? 0,
       icon: Truck,
       iconClassName: "bg-orange-50 text-orange-600",
-      trend: "18.7%",
+      changeRate: summary?.transportEmissionChangeRate ?? null,
     },
   ];
 
@@ -44,6 +47,19 @@ export const DashboardSummaryCards = ({ summary }: DashboardSummaryCardsProps) =
     <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
       {cards.map((card) => {
         const Icon = card.icon;
+        const isIncreased = card.changeRate !== null && card.changeRate > 0;
+        const isDecreased = card.changeRate !== null && card.changeRate < 0;
+        const trendClassName = isDecreased
+          ? "text-blue-600"
+          : isIncreased
+            ? "text-red-600"
+            : "text-slate-400";
+        const trendLabel =
+          card.changeRate === null
+            ? "전월 데이터 없음"
+            : `전월 대비 ${isIncreased ? "+" : isDecreased ? "-" : ""}${formatChangeRate(
+                card.changeRate,
+              )}%`;
 
         return (
           <section
@@ -66,8 +82,8 @@ export const DashboardSummaryCards = ({ summary }: DashboardSummaryCardsProps) =
                 <Icon size={20} />
               </div>
             </div>
-            <p className="mt-4 text-xs font-semibold text-emerald-600">
-              전월 대비 + {card.trend}
+            <p className={`mt-4 text-xs font-semibold ${trendClassName}`}>
+              {trendLabel}
             </p>
           </section>
         );
