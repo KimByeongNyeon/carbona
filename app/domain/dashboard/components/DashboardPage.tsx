@@ -14,7 +14,10 @@ export const DashboardPage = () => {
     isLoading,
     monthlyTrendData,
     recentActivities,
+    currentTargetPeriod,
+    target,
     targetProgress,
+    targetStatus,
   } = useDashboardPage();
 
   return (
@@ -59,7 +62,10 @@ export const DashboardPage = () => {
           <div className="grid gap-6 2xl:grid-cols-[1.3fr_1fr]">
             <DashboardRecentActivities activities={recentActivities} />
             <DashboardInsightCards
+              period={currentTargetPeriod}
+              target={target}
               targetProgress={targetProgress}
+              targetStatus={targetStatus}
               totalEmission={dashboard?.summary.totalEmission ?? 0}
             />
           </div>
