@@ -7,6 +7,10 @@ export interface DashboardSummary {
   electricityEmission: number;
   materialEmission: number;
   transportEmission: number;
+  totalEmissionChangeRate: number | null;
+  electricityEmissionChangeRate: number | null;
+  materialEmissionChangeRate: number | null;
+  transportEmissionChangeRate: number | null;
 }
 
 export interface DashboardCategoryItem {
@@ -19,11 +23,30 @@ export interface DashboardMonthlyItem {
   emissionValue: number;
 }
 
+export interface DashboardPeriod {
+  year: number;
+  month: number;
+}
+
+export interface DashboardAvailableMonth extends DashboardPeriod {
+  label: string;
+  value: string;
+}
+
+export interface DashboardRequestParams {
+  year?: number;
+  month?: number;
+  period?: number;
+}
+
 export interface Target {
   totalTarget: number;
   progress: number;
 }
 export interface DashboardResponse {
+  availableMonths: DashboardAvailableMonth[];
+  period: number;
+  selectedPeriod: DashboardPeriod;
   summary: DashboardSummary;
   categorySummary: DashboardCategoryItem[];
   monthlyTrend: DashboardMonthlyItem[];
