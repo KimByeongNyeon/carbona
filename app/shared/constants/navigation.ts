@@ -5,6 +5,7 @@ import {
   Home,
   Pencil,
   Settings,
+  Target,
   Upload,
   UserRound,
 } from "lucide-react";
@@ -28,6 +29,7 @@ export const navigationGroups: NavigationGroup[] = [
       { label: "데이터 입력", href: "/activities", icon: Pencil },
       { label: "엑셀 가져오기", href: "/excel", icon: Upload },
       { label: "배출계수 관리", href: "/emission-factors", icon: Settings },
+      { label: "목표 관리", href: "/targets", icon: Target },
       { label: "배출량 계산", href: "/calculator", icon: Calculator },
     ],
   },
