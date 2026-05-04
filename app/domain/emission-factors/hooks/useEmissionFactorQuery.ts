@@ -68,3 +68,17 @@ export const useDeleteEmissionFactor = () => {
     },
   });
 };
+
+export const useToggleEmissionFactorMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, isActive }: { id: number; isActive: boolean }) =>
+      updateEmissionFactor(id, { isActive }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: emissionFactorQueryKey });
+      queryClient.invalidateQueries({ queryKey: ["activities"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+    },
+  });
+};
