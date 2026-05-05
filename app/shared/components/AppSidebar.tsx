@@ -1,4 +1,4 @@
-import { Leaf } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { navigationGroups } from "../constants/navigation";
@@ -9,13 +9,16 @@ export const AppSidebar = ({ onNavigate }: { onNavigate?: () => void }) => {
   return (
     <aside className="flex h-full w-64 shrink-0 flex-col border-r border-slate-200 bg-white">
       <div className="flex h-16 items-center gap-3 border-b border-slate-100 px-6">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
-          <Leaf size={19} />
-        </div>
-        <div>
-          <p className="text-sm font-bold text-slate-900">PCF 탄소 배출량</p>
-          <p className="text-[11px] font-medium text-slate-500">관리 플랫폼</p>
-        </div>
+        <Link href="/dashboard" onClick={onNavigate} className="block">
+          <Image
+            src="/logo.png"
+            alt="Carbona"
+            width={132}
+            height={38}
+            priority
+            className="h-auto w-32"
+          />
+        </Link>
       </div>
 
       <nav className="flex-1 space-y-6 px-4 py-5">
