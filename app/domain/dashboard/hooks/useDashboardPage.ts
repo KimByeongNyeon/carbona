@@ -15,6 +15,11 @@ import {
 } from "../utils/dashboard.utils";
 import type { DashboardPeriod } from "../types";
 
+/**
+ * 대시보드 화면 상태와 API query parameter를 한곳에서 조율한다.
+ * 차트/테이블용 파생 데이터도 여기서 memoize해 시각화 컴포넌트가
+ * API 응답 구조를 직접 알 필요 없게 한다.
+ */
 export const useDashboardPage = () => {
   const [period, setPeriod] = useState(6);
   const [selectedPeriod, setSelectedPeriod] = useState<
@@ -57,6 +62,7 @@ export const useDashboardPage = () => {
     setPeriod(Number(value));
   };
 
+  /** 기간을 바꿔도 현재 선택한 월이 유지되도록 명시 선택 월을 상태로 저장한다. */
   const handleChangeSelectedMonth = (value: string) => {
     const [year, month] = value.split("-").map(Number);
 
@@ -64,6 +70,10 @@ export const useDashboardPage = () => {
   };
   const reportSearchParams = new URLSearchParams();
 
+  /**
+   * PDF route는 대시보드 API와 같은 query 형태를 사용한다.
+   * 덕분에 화면에서 보고 있는 대시보드와 내보낸 보고서의 기준이 일치한다.
+   */
   if (activePeriod) {
     reportSearchParams.set("year", String(activePeriod.year));
     reportSearchParams.set("month", String(activePeriod.month));

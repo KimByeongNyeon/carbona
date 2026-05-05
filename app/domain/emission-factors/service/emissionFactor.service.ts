@@ -16,12 +16,21 @@ export class EmissionFactorServiceError extends Error {
   }
 }
 
+/**
+ * 배출계수 목록은 관리 화면에서 적용중 항목을 먼저 보여줘야 하므로,
+ * 활성 상태와 생성일 기준으로 정렬해서 반환한다.
+ */
 export async function getEmissionFactors() {
   return prisma.emissionFactor.findMany({
     orderBy: [{ isActive: "desc" }, { createdAt: "desc" }],
   });
 }
 
+/**
+ * 같은 이름, 카테고리, 단위의 활성 배출계수는 하나만 허용한다.
+ * 활동 데이터 입력/Excel 매칭이 이 조합으로 배출계수를 찾기 때문에
+ * 중복 활성 항목이 있으면 계산 기준이 모호해진다.
+ */
 export async function createEmissionFactor(input: CreateEmissionFactorInput) {
   const duplicated = await prisma.emissionFactor.findFirst({
     where: {
@@ -66,6 +75,10 @@ export async function updateEmissionFactor(
   }
 
   if (input.isActive === true && !emissionFactor.isActive) {
+    /**
+     * 비활성 배출계수를 다시 켤 때도 생성과 동일한 유일성 규칙을 적용한다.
+     * 수정 payload가 일부 필드만 포함할 수 있으므로 기존 값을 섞어 최종 조합을 검사한다.
+     */
     const duplicated = await prisma.emissionFactor.findFirst({
       where: {
         id: {
@@ -92,6 +105,10 @@ export async function updateEmissionFactor(
   });
 }
 
+/**
+ * 실제 삭제 대신 비활성화로 처리한다. 이미 저장된 활동 데이터가 참조하는
+ * 배출계수 이력을 보존해야 대시보드와 과거 계산 결과를 안정적으로 유지할 수 있다.
+ */
 export async function deactivateEmissionFactor(id: number) {
   const emissionFactor = await prisma.emissionFactor.findUnique({
     where: { id },

@@ -1,3 +1,4 @@
+import { getApiErrorMessage } from "@/app/shared/utils/apiError.utils";
 import { CreateActivityInput } from "../schemas/activity.schema";
 import {
   useCreateActivityMutation,
@@ -21,7 +22,13 @@ export const useActivity = () => {
     handleDeleteActivity,
     isCreating: activityMutation.isPending,
     isDeleting: deleteMutation.isPending,
-    createError: activityMutation.error,
-    deleteError: deleteMutation.error,
+    createErrorMessage: getApiErrorMessage(
+      activityMutation.error,
+      "활동 데이터 저장 중 오류가 발생했습니다.",
+    ),
+    deleteErrorMessage: getApiErrorMessage(
+      deleteMutation.error,
+      "활동 데이터 삭제 중 오류가 발생했습니다.",
+    ),
   };
 };

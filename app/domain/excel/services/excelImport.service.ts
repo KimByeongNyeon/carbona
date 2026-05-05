@@ -15,6 +15,11 @@ export class ExcelImportServiceError extends Error {
   }
 }
 
+/**
+ * 미리보기 검증을 통과한 행만 저장한다.
+ * 사용자가 미리보기 이후 import 버튼을 누르기 전에 배출계수를 수정하거나
+ * 비활성화할 수 있으므로 저장 직전에도 배출계수를 다시 확인한다.
+ */
 export const importExcelActivities = async (
   input: ExcelImportInput,
 ): Promise<ExcelImportResult> => {
@@ -62,6 +67,10 @@ export const importExcelActivities = async (
     }),
   );
 
+  /**
+   * 활동 데이터와 import 로그를 하나의 transaction으로 저장한다.
+   * 실제로 저장되지 않은 행이 있는데 import 이력만 성공으로 남는 상황을 막기 위함이다.
+   */
   const importLog = await prisma.$transaction(async (tx) => {
     await tx.activity.createMany({
       data: activities,

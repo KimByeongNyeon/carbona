@@ -13,6 +13,7 @@ export const TargetPage = () => {
     month,
     setMonth,
     setYear,
+    saveErrorMessage,
     targets,
     year,
   } = useTargetPage();
@@ -64,6 +65,7 @@ export const TargetPage = () => {
           </div>
 
           <TargetCreateForm
+            errorMessage={saveErrorMessage}
             isSaving={isSaving}
             month={month}
             onSubmit={handleCreateTarget}

@@ -1,6 +1,7 @@
 import type { ExcelRowInput } from "../schemas/excel.schema";
 import type { ExcelPreviewRow } from "../types";
 
+/** Excel의 한국어 활동 유형 라벨을 Prisma/Zod에서 쓰는 enum 값으로 변환한다. */
 export const categoryMap: Partial<Record<
   string,
   ExcelRowInput["category"]
@@ -10,12 +11,14 @@ export const categoryMap: Partial<Record<
   운송: "TRANSPORT",
 };
 
+/** enum 카테고리 값을 미리보기 테이블용 한국어 라벨로 되돌린다. */
 export const excelCategoryLabels: Record<ExcelRowInput["category"], string> = {
   ELECTRICITY: "전기",
   MATERIAL: "원소재",
   TRANSPORT: "운송",
 };
 
+/** Zod가 Excel 날짜 값을 정규화한 뒤, 미리보기용 날짜 문자열로 포맷한다. */
 export const formatExcelDate = (date: string) => {
   return new Intl.DateTimeFormat("ko-KR", {
     year: "numeric",
@@ -27,6 +30,7 @@ export const formatExcelDate = (date: string) => {
     .replace(".", "");
 };
 
+/** 계산된 미리보기 배출량을 불필요한 소수점 없이 표시한다. */
 export const formatExcelEmission = (value: number) => {
   return value.toLocaleString("ko-KR", {
     maximumFractionDigits: 2,
@@ -34,6 +38,7 @@ export const formatExcelEmission = (value: number) => {
   });
 };
 
+/** 업로드 요약과 버튼 상태에 사용할 성공/오류 행 개수를 계산한다. */
 export const getExcelPreviewStats = (rows: ExcelPreviewRow[]) => {
   const successCount = rows.filter((row) => row.status === "success").length;
   const errorCount = rows.length - successCount;

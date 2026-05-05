@@ -1,7 +1,9 @@
 "use client";
 
-import { Calculator, RotateCcw, Save } from "lucide-react";
+import { AlertCircle, Calculator, RotateCcw, Save } from "lucide-react";
+import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
+import { createZodFormResolver } from "@/app/shared/utils/zodFormResolver";
 import {
   defaultActivityFormValues,
   maxActivityDate,
@@ -10,11 +12,16 @@ import { useActivity } from "../hooks/useActivity";
 import { useActivityForm } from "../hooks/useActivityForm";
 import {
   ActivityCategory,
+  createActivitySchema,
   CreateActivityInput,
 } from "../schemas/activity.schema";
 
 export const ActivityCreateForm = () => {
-  const { handleCreateActivity, isCreating } = useActivity();
+  const { createErrorMessage, handleCreateActivity, isCreating } =
+    useActivity();
+  const [formFeedbackMessage, setFormFeedbackMessage] = useState<string | null>(
+    null,
+  );
   const {
     handleSubmit,
     reset,
@@ -24,6 +31,8 @@ export const ActivityCreateForm = () => {
     formState: { errors },
   } = useForm<CreateActivityInput>({
     defaultValues: defaultActivityFormValues,
+    mode: "onBlur",
+    resolver: createZodFormResolver(createActivitySchema),
   });
 
   const selectedCategory = useWatch({ control, name: "category" });
@@ -40,16 +49,34 @@ export const ActivityCreateForm = () => {
     });
 
   const onSubmit = async (data: CreateActivityInput) => {
-    await handleCreateActivity(data);
-    resetForm();
+    setFormFeedbackMessage(null);
+
+    try {
+      await handleCreateActivity(data);
+      resetForm();
+    } catch {
+      // mutation 오류 메시지는 createErrorMessage를 통해 화면에 표시한다.
+    }
+  };
+
+  const onInvalidSubmit = () => {
+    setFormFeedbackMessage("입력값을 확인한 뒤 다시 저장해주세요.");
   };
 
   const inputClass =
     "h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
+  const errorInputClass =
+    "border-red-300 bg-red-50 focus:border-red-500 focus:ring-red-100";
   const labelClass = "mb-2 block text-xs font-semibold text-slate-600";
+  const feedbackMessage = formFeedbackMessage ?? createErrorMessage;
+  const getInputClass = (hasError: boolean) =>
+    `${inputClass} ${hasError ? errorInputClass : ""}`;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="grid gap-5 xl:grid-cols-[1fr_320px]">
+    <form
+      onSubmit={handleSubmit(onSubmit, onInvalidSubmit)}
+      className="grid gap-5 xl:grid-cols-[1fr_320px]"
+    >
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
         <div className="mb-5 flex items-center justify-between border-b border-slate-100 pb-4">
           <div>
@@ -65,6 +92,13 @@ export const ActivityCreateForm = () => {
           </span>
         </div>
 
+        {feedbackMessage && (
+          <div className="mb-5 flex items-start gap-2 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-600">
+            <AlertCircle className="mt-0.5 shrink-0" size={16} />
+            <span>{feedbackMessage}</span>
+          </div>
+        )}
+
         <div className="grid gap-5 md:grid-cols-2">
           <div>
             <label className={labelClass}>일자</label>
@@ -72,7 +106,7 @@ export const ActivityCreateForm = () => {
               type="date"
               max={maxActivityDate}
               {...register("activityDate", { valueAsDate: true })}
-              className={inputClass}
+              className={getInputClass(Boolean(errors.activityDate))}
             />
             {errors.activityDate && (
               <p className="mt-1 text-xs text-red-500">
@@ -100,7 +134,7 @@ export const ActivityCreateForm = () => {
             <label className={labelClass}>설명</label>
             <input
               {...register("itemName")}
-              className={inputClass}
+              className={getInputClass(Boolean(errors.itemName))}
               placeholder="예: 한국전력"
             />
             {errors.itemName && (
@@ -117,7 +151,7 @@ export const ActivityCreateForm = () => {
                 type="number"
                 step="0.01"
                 {...register("amount", { valueAsNumber: true })}
-                className={inputClass}
+                className={getInputClass(Boolean(errors.amount))}
               />
               {errors.amount && (
                 <p className="mt-1 text-xs text-red-500">
@@ -128,7 +162,15 @@ export const ActivityCreateForm = () => {
 
             <div>
               <label className={labelClass}>단위</label>
-              <input {...register("unit")} className={inputClass} />
+              <input
+                {...register("unit")}
+                className={getInputClass(Boolean(errors.unit))}
+              />
+              {errors.unit && (
+                <p className="mt-1 text-xs text-red-500">
+                  {errors.unit.message}
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -154,6 +196,11 @@ export const ActivityCreateForm = () => {
                   {selectedFactor.factorUnit}
                 </span>
               </div>
+              {errors.emissionFactorId && (
+                <p className="mt-1 text-xs text-red-500">
+                  {errors.emissionFactorId.message}
+                </p>
+              )}
             </div>
 
             <div>

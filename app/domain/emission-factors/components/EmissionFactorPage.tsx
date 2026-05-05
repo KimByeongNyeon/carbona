@@ -9,6 +9,7 @@ export const EmissionFactorPage = () => {
   const {
     activeCount,
     categoryFilter,
+    createErrorMessage,
     handleCreateEmissionFactor,
     handleToggleEmissionFactor,
     isCreateFormOpen,
@@ -73,6 +74,7 @@ export const EmissionFactorPage = () => {
         <div className="space-y-6 p-6">
           {isCreateFormOpen && (
             <EmissionFactorCreateForm
+              errorMessage={createErrorMessage}
               isCreating={isCreating}
               onCancel={() => setIsCreateFormOpen(false)}
               onSubmit={handleCreateEmissionFactor}

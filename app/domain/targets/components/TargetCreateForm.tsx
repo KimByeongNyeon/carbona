@@ -1,11 +1,13 @@
 "use client";
 
-import { Save } from "lucide-react";
-import { useEffect } from "react";
+import { AlertCircle, Save } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { CreateTargetInput } from "../schemas/target.schema";
+import { createZodFormResolver } from "@/app/shared/utils/zodFormResolver";
+import { CreateTargetInput, createTargetSchema } from "../schemas/target.schema";
 
 type TargetCreateFormProps = {
+  errorMessage: string | null;
   isSaving: boolean;
   month: number;
   onSubmit: (data: CreateTargetInput) => Promise<void>;
@@ -14,14 +16,22 @@ type TargetCreateFormProps = {
 
 const inputClass =
   "h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
+const errorInputClass =
+  "border-red-300 bg-red-50 focus:border-red-500 focus:ring-red-100";
 const labelClass = "mb-2 block text-xs font-semibold text-slate-600";
+const getInputClass = (hasError: boolean) =>
+  `${inputClass} ${hasError ? errorInputClass : ""}`;
 
 export const TargetCreateForm = ({
+  errorMessage,
   isSaving,
   month,
   onSubmit,
   year,
 }: TargetCreateFormProps) => {
+  const [formFeedbackMessage, setFormFeedbackMessage] = useState<string | null>(
+    null,
+  );
   const {
     handleSubmit,
     register,
@@ -35,6 +45,8 @@ export const TargetCreateForm = ({
       targetValue: 5000,
       memo: "",
     },
+    mode: "onBlur",
+    resolver: createZodFormResolver(createTargetSchema),
   });
 
   useEffect(() => {
@@ -43,19 +55,30 @@ export const TargetCreateForm = ({
   }, [month, setValue, year]);
 
   const handleValidSubmit = async (data: CreateTargetInput) => {
-    await onSubmit(data);
-    reset({
-      year,
-      month,
-      targetValue: data.targetValue,
-      memo: "",
-      category: data.category,
-    });
+    setFormFeedbackMessage(null);
+
+    try {
+      await onSubmit(data);
+      reset({
+        year,
+        month,
+        targetValue: data.targetValue,
+        memo: "",
+        category: data.category,
+      });
+    } catch {
+      // mutation 오류 메시지는 errorMessage prop을 통해 화면에 표시한다.
+    }
   };
+
+  const handleInvalidSubmit = () => {
+    setFormFeedbackMessage("목표 설정값을 확인해주세요.");
+  };
+  const feedbackMessage = formFeedbackMessage ?? errorMessage;
 
   return (
     <form
-      onSubmit={handleSubmit(handleValidSubmit)}
+      onSubmit={handleSubmit(handleValidSubmit, handleInvalidSubmit)}
       className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm"
     >
       <div className="mb-5 border-b border-slate-100 pb-4">
@@ -64,6 +87,13 @@ export const TargetCreateForm = ({
           전체 목표 또는 카테고리별 월간 목표를 설정합니다.
         </p>
       </div>
+
+      {feedbackMessage && (
+        <div className="mb-5 flex items-start gap-2 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-600">
+          <AlertCircle className="mt-0.5 shrink-0" size={16} />
+          <span>{feedbackMessage}</span>
+        </div>
+      )}
 
       <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
         <input type="hidden" {...register("year", { valueAsNumber: true })} />
@@ -85,7 +115,7 @@ export const TargetCreateForm = ({
             type="number"
             step="0.01"
             {...register("targetValue", { valueAsNumber: true })}
-            className={inputClass}
+            className={getInputClass(Boolean(errors.targetValue))}
           />
           {errors.targetValue && (
             <p className="mt-1 text-xs text-red-500">

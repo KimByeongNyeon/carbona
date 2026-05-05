@@ -1,11 +1,17 @@
 "use client";
 
-import { RotateCcw, Save } from "lucide-react";
+import { AlertCircle, RotateCcw, Save } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { createZodFormResolver } from "@/app/shared/utils/zodFormResolver";
 import { defaultEmissionFactorFormValues } from "../constants/emissionFactor.constants";
-import { CreateEmissionFactorInput } from "../schemas/emissionFactor.schema";
+import {
+  createEmissionFactorSchema,
+  CreateEmissionFactorInput,
+} from "../schemas/emissionFactor.schema";
 
 type EmissionFactorCreateFormProps = {
+  errorMessage: string | null;
   isCreating: boolean;
   onCancel: () => void;
   onSubmit: (data: CreateEmissionFactorInput) => Promise<void>;
@@ -13,13 +19,21 @@ type EmissionFactorCreateFormProps = {
 
 const inputClass =
   "h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
+const errorInputClass =
+  "border-red-300 bg-red-50 focus:border-red-500 focus:ring-red-100";
 const labelClass = "mb-2 block text-xs font-semibold text-slate-600";
+const getInputClass = (hasError: boolean) =>
+  `${inputClass} ${hasError ? errorInputClass : ""}`;
 
 export const EmissionFactorCreateForm = ({
+  errorMessage,
   isCreating,
   onCancel,
   onSubmit,
 }: EmissionFactorCreateFormProps) => {
+  const [formFeedbackMessage, setFormFeedbackMessage] = useState<string | null>(
+    null,
+  );
   const {
     handleSubmit,
     register,
@@ -27,16 +41,29 @@ export const EmissionFactorCreateForm = ({
     formState: { errors },
   } = useForm<CreateEmissionFactorInput>({
     defaultValues: defaultEmissionFactorFormValues,
+    mode: "onBlur",
+    resolver: createZodFormResolver(createEmissionFactorSchema),
   });
 
   const handleValidSubmit = async (data: CreateEmissionFactorInput) => {
-    await onSubmit(data);
-    reset(defaultEmissionFactorFormValues);
+    setFormFeedbackMessage(null);
+
+    try {
+      await onSubmit(data);
+      reset(defaultEmissionFactorFormValues);
+    } catch {
+      // mutation 오류 메시지는 errorMessage prop을 통해 화면에 표시한다.
+    }
   };
+
+  const handleInvalidSubmit = () => {
+    setFormFeedbackMessage("배출계수 입력값을 확인해주세요.");
+  };
+  const feedbackMessage = formFeedbackMessage ?? errorMessage;
 
   return (
     <form
-      onSubmit={handleSubmit(handleValidSubmit)}
+      onSubmit={handleSubmit(handleValidSubmit, handleInvalidSubmit)}
       className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm"
     >
       <div className="mb-5 flex items-center justify-between border-b border-slate-100 pb-4">
@@ -49,6 +76,13 @@ export const EmissionFactorCreateForm = ({
           </p>
         </div>
       </div>
+
+      {feedbackMessage && (
+        <div className="mb-5 flex items-start gap-2 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-600">
+          <AlertCircle className="mt-0.5 shrink-0" size={16} />
+          <span>{feedbackMessage}</span>
+        </div>
+      )}
 
       <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
         <div>
@@ -64,7 +98,7 @@ export const EmissionFactorCreateForm = ({
           <label className={labelClass}>설명</label>
           <input
             {...register("name")}
-            className={inputClass}
+            className={getInputClass(Boolean(errors.name))}
             placeholder="예: 한국전력"
           />
           {errors.name && (
@@ -76,7 +110,7 @@ export const EmissionFactorCreateForm = ({
           <label className={labelClass}>단위</label>
           <input
             {...register("unit")}
-            className={inputClass}
+            className={getInputClass(Boolean(errors.unit))}
             placeholder="kWh, kg, ton-km"
           />
           {errors.unit && (
@@ -90,7 +124,7 @@ export const EmissionFactorCreateForm = ({
             type="number"
             step="0.001"
             {...register("factor", { valueAsNumber: true })}
-            className={inputClass}
+            className={getInputClass(Boolean(errors.factor))}
           />
           {errors.factor && (
             <p className="mt-1 text-xs text-red-500">{errors.factor.message}</p>
@@ -101,7 +135,7 @@ export const EmissionFactorCreateForm = ({
           <label className={labelClass}>계수 단위</label>
           <input
             {...register("factorUnit")}
-            className={inputClass}
+            className={getInputClass(Boolean(errors.factorUnit))}
             placeholder="kgCO2e/kWh"
           />
           {errors.factorUnit && (

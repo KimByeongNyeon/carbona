@@ -1,3 +1,4 @@
+import { getApiErrorMessage } from "@/app/shared/utils/apiError.utils";
 import { useState } from "react";
 import { CreateTargetInput } from "../schemas/target.schema";
 import { getCurrentTargetPeriod } from "../utils/target.utils";
@@ -18,6 +19,10 @@ export const useTargetPage = () => {
   return {
     handleCreateTarget,
     isLoading: targetQuery.isLoading,
+    saveErrorMessage: getApiErrorMessage(
+      createTargetMutation.error,
+      "목표 저장 중 오류가 발생했습니다.",
+    ),
     isSaving: createTargetMutation.isPending,
     month,
     setMonth,
