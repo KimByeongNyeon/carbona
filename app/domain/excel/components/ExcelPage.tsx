@@ -1,6 +1,6 @@
 "use client";
 
-import { Download, FileCheck2, UploadCloud } from "lucide-react";
+import { FileCheck2, UploadCloud } from "lucide-react";
 import { ExcelPreviewTable } from "./ExcelPreviewTable";
 import { ExcelUploadPanel } from "./ExcelUploadPanel";
 import { useExcelPage } from "../hooks/useExcelPage";
@@ -33,13 +33,6 @@ export const ExcelPage = () => {
                 Excel 파일을 업로드하고 저장 전 데이터를 검증합니다.
               </p>
             </div>
-            <button
-              type="button"
-              className="inline-flex h-10 items-center gap-2 rounded-md border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"
-            >
-              <Download size={17} />
-              샘플 다운로드
-            </button>
           </div>
         </div>
 

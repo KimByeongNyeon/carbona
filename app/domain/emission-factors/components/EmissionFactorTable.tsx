@@ -1,6 +1,6 @@
 "use client";
 
-import { Pencil, Power } from "lucide-react";
+import { Power } from "lucide-react";
 import {
   emissionFactorCategoryLabels,
   emissionFactorCategoryStyles,
@@ -101,13 +101,6 @@ export const EmissionFactorTable = ({
               </td>
               <td className="px-4 py-3">
                 <div className="flex items-center gap-1">
-                  <button
-                    type="button"
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-md text-slate-400 transition hover:bg-blue-50 hover:text-blue-600"
-                    aria-label="배출계수 수정"
-                  >
-                    <Pencil size={16} />
-                  </button>
                   <button
                     type="button"
                     disabled={isToggling}
