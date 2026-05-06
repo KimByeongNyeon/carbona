@@ -42,27 +42,27 @@ Carbona는 다음 문제를 해결하기 위해 만들어졌습니다.
 
 ### 01. 랜딩페이지
 
-<img src="./public/videos/01 랜딩페이지.gif" alt="01. 랜딩페이지 실행 화면" width="100%">
+<img src="./public/videos/01-landing-page.gif" alt="01. 랜딩페이지 실행 화면" width="100%">
 
 ### 02. 대시보드
 
-<img src="./public/videos/02 대시보드.gif" alt="02. 대시보드 실행 화면" width="100%">
+<img src="./public/videos/02-dashboard.gif" alt="02. 대시보드 실행 화면" width="100%">
 
 ### 03. 활동 데이터 입력
 
-<img src="./public/videos/03 활동 데이터 입력.gif" alt="03. 활동 데이터 입력 실행 화면" width="100%">
+<img src="./public/videos/03-activity-input.gif" alt="03. 활동 데이터 입력 실행 화면" width="100%">
 
 ### 04. 엑셀 불러오기
 
-<img src="./public/videos/04 엑셀 불러오기.gif" alt="04. 엑셀 불러오기 실행 화면" width="100%">
+<img src="./public/videos/04-excel-import.gif" alt="04. 엑셀 불러오기 실행 화면" width="100%">
 
 ### 05. 배출계수 관리
 
-<img src="./public/videos/05 배출계수 관리.gif" alt="05. 배출계수 관리 실행 화면" width="100%">
+<img src="./public/videos/05-emission-factors.gif" alt="05. 배출계수 관리 실행 화면" width="100%">
 
 ### 06. 목표
 
-<img src="./public/videos/06 목표.gif" alt="06. 목표 실행 화면" width="100%">
+<img src="./public/videos/06-targets.gif" alt="06. 목표 실행 화면" width="100%">
 
 ## 핵심 기능
 
