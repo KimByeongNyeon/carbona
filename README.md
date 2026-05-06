@@ -438,6 +438,12 @@ types       도메인 타입
 
 ## 데이터베이스 모델
 
+### ERD
+
+아래 ERD는 Prisma schema를 기준으로 작성했습니다.
+
+<img src="./public/ERD.png" alt="Carbona ERD" width="100%">
+
 ### EmissionFactor
 
 배출계수 테이블입니다.
