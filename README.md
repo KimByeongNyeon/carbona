@@ -42,39 +42,39 @@ Carbona는 다음 문제를 해결하기 위해 만들어졌습니다.
 
 ### 01. 랜딩페이지
 
-<video controls width="100%" src="./public/01 랜딩페이지.mov"></video>
-
-[영상 파일 열기](<./public/01 랜딩페이지.mov>)
+<video controls width="100%">
+  <source src="./public/01 랜딩페이지.mov" type="video/quicktime">
+</video>
 
 ### 02. 대시보드
 
-<video controls width="100%" src="./public/02 대시보드.mov"></video>
-
-[영상 파일 열기](<./public/02 대시보드.mov>)
+<video controls width="100%">
+  <source src="./public/02 대시보드.mov" type="video/quicktime">
+</video>
 
 ### 03. 활동 데이터 입력
 
-<video controls width="100%" src="./public/03 활동 데이터 입력.mov"></video>
-
-[영상 파일 열기](<./public/03 활동 데이터 입력.mov>)
+<video controls width="100%">
+  <source src="./public/03 활동 데이터 입력.mov" type="video/quicktime">
+</video>
 
 ### 04. 엑셀 불러오기
 
-<video controls width="100%" src="./public/04 엑셀 불러오기.mov"></video>
-
-[영상 파일 열기](<./public/04 엑셀 불러오기.mov>)
+<video controls width="100%">
+  <source src="./public/04 엑셀 불러오기.mov" type="video/quicktime">
+</video>
 
 ### 05. 배출계수 관리
 
-<video controls width="100%" src="./public/05 배출계수 관리.mov"></video>
-
-[영상 파일 열기](<./public/05 배출계수 관리.mov>)
+<video controls width="100%">
+  <source src="./public/05 배출계수 관리.mov" type="video/quicktime">
+</video>
 
 ### 06. 목표
 
-<video controls width="100%" src="./public/06 목표.mov"></video>
-
-[영상 파일 열기](<./public/06 목표.mov>)
+<video controls width="100%">
+  <source src="./public/06 목표.mov" type="video/quicktime">
+</video>
 
 ## 핵심 기능
 
