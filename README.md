@@ -42,39 +42,27 @@ Carbona는 다음 문제를 해결하기 위해 만들어졌습니다.
 
 ### 01. 랜딩페이지
 
-<video controls width="100%">
-  <source src="./public/01 랜딩페이지.mov" type="video/quicktime">
-</video>
+<img src="./public/videos/01 랜딩페이지.gif" alt="01. 랜딩페이지 실행 화면" width="100%">
 
 ### 02. 대시보드
 
-<video controls width="100%">
-  <source src="./public/02 대시보드.mov" type="video/quicktime">
-</video>
+<img src="./public/videos/02 대시보드.gif" alt="02. 대시보드 실행 화면" width="100%">
 
 ### 03. 활동 데이터 입력
 
-<video controls width="100%">
-  <source src="./public/03 활동 데이터 입력.mov" type="video/quicktime">
-</video>
+<img src="./public/videos/03 활동 데이터 입력.gif" alt="03. 활동 데이터 입력 실행 화면" width="100%">
 
 ### 04. 엑셀 불러오기
 
-<video controls width="100%">
-  <source src="./public/04 엑셀 불러오기.mov" type="video/quicktime">
-</video>
+<img src="./public/videos/04 엑셀 불러오기.gif" alt="04. 엑셀 불러오기 실행 화면" width="100%">
 
 ### 05. 배출계수 관리
 
-<video controls width="100%">
-  <source src="./public/05 배출계수 관리.mov" type="video/quicktime">
-</video>
+<img src="./public/videos/05 배출계수 관리.gif" alt="05. 배출계수 관리 실행 화면" width="100%">
 
 ### 06. 목표
 
-<video controls width="100%">
-  <source src="./public/06 목표.mov" type="video/quicktime">
-</video>
+<img src="./public/videos/06 목표.gif" alt="06. 목표 실행 화면" width="100%">
 
 ## 핵심 기능
 
@@ -105,7 +93,7 @@ Carbona는 다음 문제를 해결하기 위해 만들어졌습니다.
 배출량 계산식:
 
 ```ts
-emissionValue = amount * emissionFactor.factor
+emissionValue = amount * emissionFactor.factor;
 ```
 
 계산 결과는 저장 시점에 고정됩니다. 이후 배출계수가 수정되더라도 과거 활동 데이터의 계산 결과가 흔들리지 않도록 하기 위한 설계입니다.
@@ -601,7 +589,7 @@ GET /api/reports?year={year}&month={month}&period={period}
 활동 데이터 저장 시 다음 값을 계산해 `Activity.emissionValue`에 저장합니다.
 
 ```ts
-amount * emissionFactor.factor
+amount * emissionFactor.factor;
 ```
 
 조회할 때마다 배출량을 재계산하지 않습니다.
